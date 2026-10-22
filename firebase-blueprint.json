@@ -1,0 +1,434 @@
+{
+  "entities": {
+    "Itinerary": {
+      "title": "Itinerary",
+      "description": "A comprehensive tour trip itinerary with scheduled days, activities, and pricing",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "code": { "type": "string", "maxLength": 64 },
+        "title": { "type": "string", "maxLength": 200 },
+        "clientId": { "type": "string", "maxLength": 128 },
+        "destination": { "type": "string", "maxLength": 200 },
+        "startDate": { "type": "string", "maxLength": 32 },
+        "endDate": { "type": "string", "maxLength": 32 },
+        "status": { "type": "string", "enum": ["Draft", "Proposed", "Confirmed", "In Progress", "Completed", "Cancelled"] },
+        "leadStaffId": { "type": "string", "maxLength": 128 },
+        "partySize": { "type": "number" },
+        "currency": { "type": "string", "maxLength": 10 },
+        "totalClientPrice": { "type": "number" },
+        "depositRequired": { "type": "number" },
+        "heroImage": { "type": "string", "maxLength": 2000 },
+        "overview": { "type": "string", "maxLength": 10000 },
+        "days": { "type": "array" },
+        "highlights": { "type": "array" },
+        "inclusions": { "type": "array" },
+        "exclusions": { "type": "array" },
+        "clientNotes": { "type": "string", "maxLength": 5000 },
+        "lastUpdated": { "type": "string", "maxLength": 64 },
+        "lastEditedBy": { "type": "string", "maxLength": 200 },
+        "lastEditedByUid": { "type": "string", "maxLength": 128 },
+        "lastEditedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "code", "title", "clientId", "status"]
+    },
+    "Hotel": {
+      "title": "Hotel",
+      "description": "Hotel accommodation details and contracted rates",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 200 },
+        "city": { "type": "string", "maxLength": 100 },
+        "country": { "type": "string", "maxLength": 100 },
+        "address": { "type": "string", "maxLength": 300 },
+        "starRating": { "type": "number" },
+        "imageUrl": { "type": "string", "maxLength": 2000 },
+        "description": { "type": "string", "maxLength": 5000 },
+        "roomType": { "type": "string", "maxLength": 100 },
+        "boardBasis": { "type": "string", "maxLength": 50 },
+        "amenities": { "type": "array" },
+        "checkInTime": { "type": "string", "maxLength": 20 },
+        "checkOutTime": { "type": "string", "maxLength": 20 },
+        "contactPhone": { "type": "string", "maxLength": 50 },
+        "pricePerNight": { "type": "number" },
+        "currency": { "type": "string", "maxLength": 10 },
+        "lastEditedBy": { "type": "string", "maxLength": 200 },
+        "lastEditedByUid": { "type": "string", "maxLength": 128 },
+        "lastEditedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "name", "city", "country"]
+    },
+    "Supplier": {
+      "title": "Supplier",
+      "description": "Tour supplier or contractor including lone provider settings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "maxLength": 50 },
+        "isLoneProvider": { "type": "boolean" },
+        "loneProviderType": { "type": "string", "maxLength": 100 },
+        "city": { "type": "string", "maxLength": 100 },
+        "country": { "type": "string", "maxLength": 100 },
+        "contactPerson": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 150 },
+        "phone": { "type": "string", "maxLength": 50 },
+        "whatsappNumber": { "type": "string", "maxLength": 50 },
+        "rating": { "type": "number" },
+        "notes": { "type": "string", "maxLength": 5000 },
+        "lastEditedBy": { "type": "string", "maxLength": 200 },
+        "lastEditedByUid": { "type": "string", "maxLength": 128 },
+        "lastEditedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "name", "category"]
+    },
+    "SupplierBooking": {
+      "title": "SupplierBooking",
+      "description": "Reserved supplier booking tied to a trip",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "supplierId": { "type": "string", "maxLength": 128 },
+        "tripId": { "type": "string", "maxLength": 128 },
+        "serviceDescription": { "type": "string", "maxLength": 1000 },
+        "date": { "type": "string", "maxLength": 32 },
+        "startTime": { "type": "string", "maxLength": 20 },
+        "endTime": { "type": "string", "maxLength": 20 },
+        "guestsCount": { "type": "number" },
+        "status": { "type": "string", "enum": ["Requested", "Confirmed", "Voucher Issued", "Paid", "Cancelled"] },
+        "confirmationNumber": { "type": "string", "maxLength": 100 },
+        "voucherNumber": { "type": "string", "maxLength": 100 },
+        "cost": { "type": "number" },
+        "currency": { "type": "string", "maxLength": 10 },
+        "notes": { "type": "string", "maxLength": 5000 },
+        "lastEditedBy": { "type": "string", "maxLength": 200 },
+        "lastEditedByUid": { "type": "string", "maxLength": 128 },
+        "lastEditedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "supplierId", "tripId", "date", "status"]
+    },
+    "Client": {
+      "title": "Client",
+      "description": "Customer VIP record with travel requirements and contact details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 200 },
+        "email": { "type": "string", "maxLength": 150 },
+        "phone": { "type": "string", "maxLength": 50 },
+        "companyOrFamily": { "type": "string", "maxLength": 200 },
+        "vipTier": { "type": "string", "maxLength": 50 },
+        "nationality": { "type": "string", "maxLength": 100 },
+        "dietaryRestrictions": { "type": "array" },
+        "preferences": { "type": "array" },
+        "passportExpiry": { "type": "string", "maxLength": 32 },
+        "emergencyContact": { "type": "object" },
+        "notes": { "type": "string", "maxLength": 5000 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "lastEditedBy": { "type": "string", "maxLength": 200 },
+        "lastEditedByUid": { "type": "string", "maxLength": 128 },
+        "lastEditedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "name"]
+    },
+    "CommunicationRecord": {
+      "title": "CommunicationRecord",
+      "description": "Client interaction history record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "clientId": { "type": "string", "maxLength": 128 },
+        "staffId": { "type": "string", "maxLength": 128 },
+        "date": { "type": "string", "maxLength": 32 },
+        "type": { "type": "string", "maxLength": 50 },
+        "subject": { "type": "string", "maxLength": 200 },
+        "summary": { "type": "string", "maxLength": 5000 },
+        "nextFollowUpDate": { "type": "string", "maxLength": 32 },
+        "lastEditedBy": { "type": "string", "maxLength": 200 },
+        "lastEditedByUid": { "type": "string", "maxLength": 128 },
+        "lastEditedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "clientId", "date", "subject"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "Staff action item, tour checklist, or booking task",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 5000 },
+        "tripId": { "type": "string", "maxLength": 128 },
+        "clientId": { "type": "string", "maxLength": 128 },
+        "assignedStaffId": { "type": "string", "maxLength": 128 },
+        "priority": { "type": "string", "enum": ["Low", "Medium", "High", "Urgent"] },
+        "status": { "type": "string", "enum": ["Todo", "In Progress", "Review", "Completed"] },
+        "dueDate": { "type": "string", "maxLength": 32 },
+        "isReminder": { "type": "boolean" },
+        "category": { "type": "string", "maxLength": 50 },
+        "completedAt": { "type": "string", "maxLength": 64 },
+        "isSnoozed": { "type": "boolean" },
+        "snoozedUntil": { "type": "string", "maxLength": 32 },
+        "lastEditedBy": { "type": "string", "maxLength": 200 },
+        "lastEditedByUid": { "type": "string", "maxLength": 128 },
+        "lastEditedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "title", "assignedStaffId", "status"]
+    },
+    "Invoice": {
+      "title": "Invoice",
+      "description": "Customer invoice with payment schedule and records",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "invoiceNumber": { "type": "string", "maxLength": 64 },
+        "tripId": { "type": "string", "maxLength": 128 },
+        "clientId": { "type": "string", "maxLength": 128 },
+        "issueDate": { "type": "string", "maxLength": 32 },
+        "dueDate": { "type": "string", "maxLength": 32 },
+        "currency": { "type": "string", "maxLength": 10 },
+        "totalAmount": { "type": "number" },
+        "amountPaid": { "type": "number" },
+        "balanceDue": { "type": "number" },
+        "status": { "type": "string", "enum": ["Draft", "Sent", "Partially Paid", "Paid", "Overdue"] },
+        "items": { "type": "array" },
+        "payments": { "type": "array" },
+        "paymentTerms": { "type": "string", "maxLength": 1000 },
+        "lastEditedBy": { "type": "string", "maxLength": 200 },
+        "lastEditedByUid": { "type": "string", "maxLength": 128 },
+        "lastEditedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "invoiceNumber", "status"]
+    },
+    "Expense": {
+      "title": "Expense",
+      "description": "Company operational expense or tour disbursement",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "tripId": { "type": "string", "maxLength": 128 },
+        "supplierId": { "type": "string", "maxLength": 128 },
+        "category": { "type": "string", "maxLength": 50 },
+        "date": { "type": "string", "maxLength": 32 },
+        "amount": { "type": "number" },
+        "currency": { "type": "string", "maxLength": 10 },
+        "convertedAmountUSD": { "type": "number" },
+        "paymentStatus": { "type": "string", "enum": ["Pending", "Paid", "Reimbursed"] },
+        "paymentMethod": { "type": "string", "maxLength": 50 },
+        "isGeneralOverhead": { "type": "boolean" },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "lastEditedBy": { "type": "string", "maxLength": 200 },
+        "lastEditedByUid": { "type": "string", "maxLength": 128 },
+        "lastEditedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "title", "amount", "paymentStatus"]
+    },
+    "ActivityCatalogItem": {
+      "title": "ActivityCatalogItem",
+      "description": "Pre-configured tour activity in the library",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 5000 },
+        "durationHours": { "type": "number" },
+        "category": { "type": "string", "maxLength": 50 },
+        "location": { "type": "string", "maxLength": 150 },
+        "costEstimate": { "type": "number" },
+        "currency": { "type": "string", "maxLength": 10 },
+        "supplierId": { "type": "string", "maxLength": 128 },
+        "keyword": { "type": "string", "maxLength": 50 },
+        "lastEditedBy": { "type": "string", "maxLength": 200 },
+        "lastEditedByUid": { "type": "string", "maxLength": 128 },
+        "lastEditedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "name"]
+    },
+    "SavedDescriptionSnippet": {
+      "title": "SavedDescriptionSnippet",
+      "description": "Reusable copywriting snippet for itinerary building",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "keywords": { "type": "array" },
+        "title": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "maxLength": 50 },
+        "location": { "type": "string", "maxLength": 150 },
+        "defaultDurationHours": { "type": "number" },
+        "description": { "type": "string", "maxLength": 5000 },
+        "costEstimate": { "type": "number" },
+        "lastEditedBy": { "type": "string", "maxLength": 200 },
+        "lastEditedByUid": { "type": "string", "maxLength": 128 },
+        "lastEditedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "title", "description"]
+    },
+    "SupplierInvoice": {
+      "title": "SupplierInvoice",
+      "description": "Accounts payable invoice received from a tour supplier",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "invoiceNumber": { "type": "string", "maxLength": 64 },
+        "supplierId": { "type": "string", "maxLength": 128 },
+        "tripId": { "type": "string", "maxLength": 128 },
+        "issueDate": { "type": "string", "maxLength": 32 },
+        "dueDate": { "type": "string", "maxLength": 32 },
+        "amount": { "type": "number" },
+        "currency": { "type": "string", "maxLength": 10 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "status": { "type": "string", "enum": ["Draft", "Pending Review", "Approved", "Paid", "Overdue"] },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "lastEditedBy": { "type": "string", "maxLength": 200 },
+        "lastEditedByUid": { "type": "string", "maxLength": 128 },
+        "lastEditedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "invoiceNumber", "supplierId", "amount", "status"]
+    },
+    "StaffMember": {
+      "title": "StaffMember",
+      "description": "Internal staff team directory profile and contact info",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 200 },
+        "role": { "type": "string", "maxLength": 100 },
+        "department": { "type": "string", "maxLength": 100 },
+        "skills": { "type": "array" },
+        "bio": { "type": "string", "maxLength": 2000 },
+        "email": { "type": "string", "maxLength": 150 },
+        "phone": { "type": "string", "maxLength": 50 },
+        "avatar": { "type": "string", "maxLength": 2000 },
+        "activeLocation": { "type": "string", "maxLength": 100 },
+        "isApproved": { "type": "boolean" },
+        "isAdmin": { "type": "boolean" },
+        "lastEditedBy": { "type": "string", "maxLength": 200 },
+        "lastEditedByUid": { "type": "string", "maxLength": 128 },
+        "lastEditedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "name", "role", "email"]
+    },
+    "ApprovedMember": {
+      "title": "ApprovedMember",
+      "description": "Google authenticated user account with team access approval status",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 150 },
+        "displayName": { "type": "string", "maxLength": 150 },
+        "photoURL": { "type": "string", "maxLength": 2000 },
+        "role": { "type": "string", "enum": ["admin", "staff"] },
+        "status": { "type": "string", "enum": ["approved", "pending", "rejected"] },
+        "approvedAt": { "type": "string", "maxLength": 64 },
+        "approvedBy": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "lastLoginAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["uid", "email", "status"]
+    },
+    "WorkspaceSettings": {
+      "title": "WorkspaceSettings",
+      "description": "Shared company logo, exchange rates, and global preferences",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "companyLogo": { "type": "string", "maxLength": 2000 },
+        "exchangeRates": { "type": "object" },
+        "lastEditedBy": { "type": "string", "maxLength": 200 },
+        "lastEditedByUid": { "type": "string", "maxLength": 128 },
+        "lastEditedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id"]
+    },
+    "ItineraryPassport": {
+      "title": "ItineraryPassport",
+      "description": "Participant passport details manifest for a tour itinerary",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "tripId": { "type": "string", "maxLength": 128 },
+        "participantName": { "type": "string", "maxLength": 200 },
+        "nationality": { "type": "string", "maxLength": 100 },
+        "passportNumber": { "type": "string", "maxLength": 100 },
+        "dateOfIssue": { "type": "string", "maxLength": 32 },
+        "dateOfExpiry": { "type": "string", "maxLength": 32 },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "lastEditedBy": { "type": "string", "maxLength": 200 }
+      },
+      "required": ["id", "tripId", "participantName", "passportNumber"]
+    }
+  },
+  "firestore": {
+    "/itineraries/{itineraryId}": {
+      "schema": "Itinerary",
+      "description": "Collection of all tour itineraries and travel proposals"
+    },
+    "/itinerary_passports/{passportId}": {
+      "schema": "ItineraryPassport",
+      "description": "Collection of itinerary participant passport records"
+    },
+    "/hotels/{hotelId}": {
+      "schema": "Hotel",
+      "description": "Collection of accommodation hotel partners"
+    },
+    "/suppliers/{supplierId}": {
+      "schema": "Supplier",
+      "description": "Collection of suppliers and lone providers"
+    },
+    "/supplier_bookings/{bookingId}": {
+      "schema": "SupplierBooking",
+      "description": "Collection of reserved supplier bookings"
+    },
+    "/clients/{clientId}": {
+      "schema": "Client",
+      "description": "Collection of VIP client profiles"
+    },
+    "/communications/{communicationId}": {
+      "schema": "CommunicationRecord",
+      "description": "Collection of client communication logs"
+    },
+    "/tasks/{taskId}": {
+      "schema": "Task",
+      "description": "Collection of staff tasks and booking checklists"
+    },
+    "/invoices/{invoiceId}": {
+      "schema": "Invoice",
+      "description": "Collection of client invoices and payments"
+    },
+    "/expenses/{expenseId}": {
+      "schema": "Expense",
+      "description": "Collection of company expenses and disbursements"
+    },
+    "/activity_catalog/{activityId}": {
+      "schema": "ActivityCatalogItem",
+      "description": "Collection of activity library items"
+    },
+    "/saved_descriptions/{snippetId}": {
+      "schema": "SavedDescriptionSnippet",
+      "description": "Collection of reusable snippet descriptions"
+    },
+    "/supplier_invoices/{invoiceId}": {
+      "schema": "SupplierInvoice",
+      "description": "Collection of accounts payable supplier invoices"
+    },
+    "/staff/{staffId}": {
+      "schema": "StaffMember",
+      "description": "Collection of internal staff directory profiles"
+    },
+    "/approved_members/{memberUid}": {
+      "schema": "ApprovedMember",
+      "description": "Collection of approved team members authorized to access the shared workspace"
+    },
+    "/admins/{adminUid}": {
+      "schema": "ApprovedMember",
+      "description": "Collection of administrator credentials for role lookup"
+    },
+    "/workspace_settings/{settingId}": {
+      "schema": "WorkspaceSettings",
+      "description": "Shared workspace branding and exchange rates configuration"
+    }
+  }
+}

@@ -1,0 +1,172 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global Default Deny Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Hardened Global Primitives
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Root administrator bootstrapped from runtime configuration (case-insensitive)
+    function isBootstrappedAdmin() {
+      return isSignedIn() &&
+        request.auth.token.email is string &&
+        (request.auth.token.email.lower() == 'josh@pizazzisrael.com' ||
+         request.auth.token.email == 'josh@pizazzisrael.com');
+    }
+
+    function isAdmin() {
+      return isBootstrappedAdmin() ||
+        (isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid))) ||
+        (isSignedIn() && exists(/databases/$(database)/documents/approved_members/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/approved_members/$(request.auth.uid)).data.role == 'admin');
+    }
+
+    // Team membership check: user must be verified/approved if signed in with Google, or accessing workspace
+    function isApprovedTeamMember() {
+      return !isSignedIn() ||
+        isBootstrappedAdmin() ||
+        isAdmin() ||
+        (exists(/databases/$(database)/documents/approved_members/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/approved_members/$(request.auth.uid)).data.status == 'approved');
+    }
+
+    // Connection validation endpoint
+    match /test/{docId} {
+      allow read: if isApprovedTeamMember();
+    }
+
+    // Approved Team Members collection
+    match /approved_members/{memberUid} {
+      allow read: if isApprovedTeamMember();
+      allow write: if isApprovedTeamMember() && isValidId(memberUid);
+    }
+
+    // Admins registry collection
+    match /admins/{adminUid} {
+      allow read: if isApprovedTeamMember();
+      allow write: if isApprovedTeamMember() && isValidId(adminUid);
+    }
+
+    // Workspace Settings & Initialization State
+    match /workspace_settings/{settingId} {
+      allow read: if isApprovedTeamMember();
+      allow write: if isApprovedTeamMember() && isValidId(settingId);
+    }
+
+    // Tour Itineraries
+    match /itineraries/{itineraryId} {
+      allow read: if isApprovedTeamMember();
+      allow create, update: if isApprovedTeamMember() && isValidId(itineraryId);
+      allow delete: if isApprovedTeamMember() && isValidId(itineraryId);
+    }
+
+    // Hotels
+    match /hotels/{hotelId} {
+      allow read: if isApprovedTeamMember();
+      allow create, update: if isApprovedTeamMember() && isValidId(hotelId);
+      allow delete: if isApprovedTeamMember() && isValidId(hotelId);
+    }
+
+    // Suppliers
+    match /suppliers/{supplierId} {
+      allow read: if isApprovedTeamMember();
+      allow create, update: if isApprovedTeamMember() && isValidId(supplierId);
+      allow delete: if isApprovedTeamMember() && isValidId(supplierId);
+    }
+
+    // Supplier Bookings
+    match /supplier_bookings/{bookingId} {
+      allow read: if isApprovedTeamMember();
+      allow create, update: if isApprovedTeamMember() && isValidId(bookingId);
+      allow delete: if isApprovedTeamMember() && isValidId(bookingId);
+    }
+
+    // Clients
+    match /clients/{clientId} {
+      allow read: if isApprovedTeamMember();
+      allow create, update: if isApprovedTeamMember() && isValidId(clientId);
+      allow delete: if isApprovedTeamMember() && isValidId(clientId);
+    }
+
+    // Communication Records
+    match /communications/{communicationId} {
+      allow read: if isApprovedTeamMember();
+      allow create, update: if isApprovedTeamMember() && isValidId(communicationId);
+      allow delete: if isApprovedTeamMember() && isValidId(communicationId);
+    }
+
+    // Tasks
+    match /tasks/{taskId} {
+      allow read: if isApprovedTeamMember();
+      allow create, update: if isApprovedTeamMember() && isValidId(taskId);
+      allow delete: if isApprovedTeamMember() && isValidId(taskId);
+    }
+
+    // Client Invoices
+    match /invoices/{invoiceId} {
+      allow read: if isApprovedTeamMember();
+      allow create, update: if isApprovedTeamMember() && isValidId(invoiceId);
+      allow delete: if isApprovedTeamMember() && isValidId(invoiceId);
+    }
+
+    // Expenses
+    match /expenses/{expenseId} {
+      allow read: if isApprovedTeamMember();
+      allow create, update: if isApprovedTeamMember() && isValidId(expenseId);
+      allow delete: if isApprovedTeamMember() && isValidId(expenseId);
+    }
+
+    // Activity Catalog Items
+    match /activity_catalog/{activityId} {
+      allow read: if isApprovedTeamMember();
+      allow create, update: if isApprovedTeamMember() && isValidId(activityId);
+      allow delete: if isApprovedTeamMember() && isValidId(activityId);
+    }
+
+    // Saved Description Snippets
+    match /saved_descriptions/{snippetId} {
+      allow read: if isApprovedTeamMember();
+      allow create, update: if isApprovedTeamMember() && isValidId(snippetId);
+      allow delete: if isApprovedTeamMember() && isValidId(snippetId);
+    }
+
+    // Supplier Invoices
+    match /supplier_invoices/{invoiceId} {
+      allow read: if isApprovedTeamMember();
+      allow create, update: if isApprovedTeamMember() && isValidId(invoiceId);
+      allow delete: if isApprovedTeamMember() && isValidId(invoiceId);
+    }
+
+    // Itinerary Passports Manifest
+    match /itinerary_passports/{passportId} {
+      allow read: if isApprovedTeamMember();
+      allow create, update: if isApprovedTeamMember() && isValidId(passportId);
+      allow delete: if isApprovedTeamMember() && isValidId(passportId);
+    }
+
+    // Staff Directory (supports admin removal and updates)
+    match /staff/{staffId} {
+      allow read: if isApprovedTeamMember();
+      allow create, update: if isApprovedTeamMember() && isValidId(staffId);
+      allow delete: if (isAdmin() || isApprovedTeamMember()) && isValidId(staffId);
+    }
+  }
+}
